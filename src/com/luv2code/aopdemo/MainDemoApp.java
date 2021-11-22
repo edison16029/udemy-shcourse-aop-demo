@@ -18,8 +18,10 @@ public class MainDemoApp {
 		AccountDAO theAccountDAO = context.getBean("accountDAO", AccountDAO.class);
 		
 		// call the business method
-		
-		theAccountDAO.addAccount(new Account(), true);
+		Account theAccount = new Account();
+		theAccount.setName("Eddie");
+		theAccount.setLevel("Gold");
+		theAccountDAO.addAccount(theAccount, true);
 		theAccountDAO.doWork();
 		
 		theAccountDAO.setName("hello");
