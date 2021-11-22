@@ -1,6 +1,10 @@
 package com.luv2code.aopdemo.aspect;
 
+import java.util.List;
+
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.reflect.MethodSignature;
@@ -38,6 +42,7 @@ public class MyDemoLoggingAspect {
 		
 		System.out.println("Method Signature " + methodSignature);
 		
+		//display the method arguments
 		Object[] methodArgs = theJoinPoint.getArgs();
 		
 		for(Object tempArg : methodArgs) {
@@ -49,8 +54,45 @@ public class MyDemoLoggingAspect {
 				System.out.println("Account Level: " + theAccount.getLevel());
 			}
 		}
+	}
+	
+	@AfterReturning(
+			pointcut = "execution(* com.luv2code.aopdemo.dao.AccountDAO.findAccounts(..))",
+			returning = "result")
+	public void afterReturningFindAccountsAdvice(JoinPoint theJoinPoint, List<Account> result) {
 		
-		//display the method arguments
+		String method = theJoinPoint.getSignature().toShortString();
+		
+		System.out.println("\n==========>>> Executing @AfterReturning on method : " + method);
+		
+		System.out.println("\n==========>>> Result is " + result);
+		
+		//We can post process data 
+		convertAccountNamesToUpperCase(result);
+		
+		System.out.println("\n==========>>> Result is " + result);
+	}
+
+	private void convertAccountNamesToUpperCase(List<Account> result) {
+		// TODO Auto-generated method stub
+		
+		for(Account tempAccount : result) {
+			tempAccount.setName(tempAccount.getName().toUpperCase());
+		}
+		
+	}
+	
+	@AfterThrowing(
+			pointcut = "execution(* com.luv2code.aopdemo.dao.AccountDAO.findAccounts(..))",
+			throwing = "theExc")
+	public void afterThrowingFindAccountsAdvice(JoinPoint theJoinPoint, Throwable theExc) {
+		
+		String method = theJoinPoint.getSignature().toShortString();
+		
+		System.out.println("\n==========>>> Executing @AfterThrowing on method : " + method);
+		
+		System.out.println("\n==========>>> The exception is: " + theExc);
+		
 	}
 	
 

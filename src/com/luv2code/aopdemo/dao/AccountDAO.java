@@ -1,5 +1,8 @@
 package com.luv2code.aopdemo.dao;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 
 import com.luv2code.aopdemo.Account;
@@ -34,5 +37,23 @@ public class AccountDAO {
 		this.serviceCode = serviceCode;
 	}
 	
+	public List<Account> findAccounts(boolean tripWire) {
+		
+		if (tripWire) {
+			throw new RuntimeException("Throwing some error");
+		}
+		
+		System.out.println("RETURNING LIST OF ACCOUNTS");
+		List<Account> myAccounts = new ArrayList<Account>();
+		Account temp1 = new Account("John", "Silver");
+		Account temp2 = new Account("Manny", "Gold");
+		Account temp3 = new Account("Alba", "Broze");
+		
+		myAccounts.add(temp1);
+		myAccounts.add(temp2);
+		myAccounts.add(temp3);
+		
+		return myAccounts;
+	}
 	
 }
