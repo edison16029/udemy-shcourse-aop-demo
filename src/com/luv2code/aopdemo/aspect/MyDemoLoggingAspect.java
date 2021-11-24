@@ -3,8 +3,11 @@ package com.luv2code.aopdemo.aspect;
 import java.util.List;
 
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.AfterThrowing;
+import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.reflect.MethodSignature;
@@ -95,5 +98,41 @@ public class MyDemoLoggingAspect {
 		
 	}
 	
+	@After("execution(* com.luv2code.aopdemo.dao.AccountDAO.findAccounts(..))")
+	public void afterFinallyFindAccountsAdvice(JoinPoint theJoinPoint) {
+		
+		String method = theJoinPoint.getSignature().toShortString();
+		
+		System.out.println("\n==========>>> Executing @After (finally) on method : " + method);
+	}
+	
+	
+	@Around("execution(* com.luv2code.aopdemo.service.*.getFortune(..))")
+	public Object aroundGetFortune(
+			ProceedingJoinPoint theProceedingJoinPoint) throws Throwable {
+		
+		String method = theProceedingJoinPoint.getSignature().toShortString();
+		System.out.println("\n==========>>> Executing @Around on method : " + method);
+		
+		long begin = System.currentTimeMillis();
+		Object result = null;
+		try {
+			result = theProceedingJoinPoint.proceed();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			System.out.println(e.getMessage());
+			throw e;
+//			e.printStackTrace();
+		}
+		
+		long end = System.currentTimeMillis();
+		
+		long duration = end - begin;
+		
+		System.out.println("\n======> Duration: " + duration/1000.0 + " seconds" );
+		
+		return result; //Since we called the function, we need to return whatever the function returns
+	}
+
 
 }
